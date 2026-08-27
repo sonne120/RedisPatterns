@@ -1,14 +1,7 @@
 # Redis Patterns
 
-Production-ready Redis patterns built for the real world. Features resilient error handling, atomic Lua scripts, and insightful comments explaining the why, not just the what. Run the entire solution and API instantly with a single docker compose up.
+Production-ready Redis patterns built.
 
-```
-RedisPatterns.sln
-├── src/RedisPatterns.Core     class library: all pattern implementations
-├── src/RedisPatterns.Api      ASP.NET Core minimal API: one endpoint group per pattern
-├── docker-compose.yml         Redis Stack + Postgres 16 + Kafka (KRaft)
-└── README.md                  you are here
-```
 
 | # | Pattern | Implementation | Endpoints |
 |---|---------|----------------|-----------|
