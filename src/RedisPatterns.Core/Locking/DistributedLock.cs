@@ -71,6 +71,8 @@ public sealed class DistributedLockHandle : IAsyncDisposable
     private readonly string _token;
     private readonly TimeSpan _ttl;
     private readonly CancellationTokenSource _renewCts = new();
+    private Task? _renewTask;
+    private int _disposed;
 
     public bool IsHeld { get; private set; } = true;
 
@@ -84,7 +86,7 @@ public sealed class DistributedLockHandle : IAsyncDisposable
         _token = token;
         _ttl = ttl;
         if (autoRenew)
-            _ = RenewLoopAsync(_renewCts.Token);
+            _renewTask = RenewLoopAsync(_renewCts.Token);
     }
 
     private async Task RenewLoopAsync(CancellationToken ct)
@@ -115,7 +117,14 @@ public sealed class DistributedLockHandle : IAsyncDisposable
 
     public async ValueTask DisposeAsync()
     {
+        if (Interlocked.Exchange(ref _disposed, 1) != 0) return;
+
         await _renewCts.CancelAsync();
+        if (_renewTask is not null)
+        {
+            try { await _renewTask; }
+            catch { }
+        }
         _renewCts.Dispose();
         try
         {

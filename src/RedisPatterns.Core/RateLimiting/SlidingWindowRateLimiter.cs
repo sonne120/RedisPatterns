@@ -14,14 +14,11 @@ public sealed class SlidingWindowRateLimiter(
     private readonly TimeSpan _window = window ?? TimeSpan.FromMinutes(1);
 
     private const string Script = """
-        -- KEYS[1] zset key
-        -- ARGV[1] now ms, ARGV[2] window ms, ARGV[3] limit, ARGV[4] unique member
         local now = tonumber(ARGV[1])
         local windowMs = tonumber(ARGV[2])
         redis.call('ZREMRANGEBYSCORE', KEYS[1], '-inf', now - windowMs)
         local count = redis.call('ZCARD', KEYS[1])
         if count >= tonumber(ARGV[3]) then
-            -- earliest member decides when a slot frees up
             local oldest = redis.call('ZRANGE', KEYS[1], 0, 0, 'WITHSCORES')
             local retryMs = windowMs
             if oldest[2] then retryMs = math.max(tonumber(oldest[2]) + windowMs - now, 0) end

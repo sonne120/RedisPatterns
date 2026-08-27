@@ -14,8 +14,6 @@ public sealed class FixedWindowRateLimiter(
     private readonly TimeSpan _window = window ?? TimeSpan.FromMinutes(1);
 
     private const string Script = """
-        -- KEYS[1] window counter key
-        -- ARGV[1] limit, ARGV[2] window ms
         local count = redis.call('INCR', KEYS[1])
         if count == 1 then
             redis.call('PEXPIRE', KEYS[1], ARGV[2])

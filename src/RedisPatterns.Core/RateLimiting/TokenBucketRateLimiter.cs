@@ -13,7 +13,6 @@ public sealed class TokenBucketRateLimiter(
     private readonly RedisOptions _opt = options.Value;
 
     private const string Script = """
-        -- KEYS[1] bucket hash; ARGV[1] capacity, ARGV[2] refill/sec, ARGV[3] cost
         local capacity = tonumber(ARGV[1])
         local rate     = tonumber(ARGV[2])
         local cost     = tonumber(ARGV[3])
@@ -26,7 +25,6 @@ public sealed class TokenBucketRateLimiter(
         local ts     = tonumber(state[2])
         if tokens == nil then tokens = capacity; ts = nowMs end
 
-        -- lazy refill
         tokens = math.min(capacity, tokens + (nowMs - ts) / 1000.0 * rate)
 
         local allowed = 0
@@ -39,7 +37,6 @@ public sealed class TokenBucketRateLimiter(
         end
 
         redis.call('HSET', KEYS[1], 'tokens', tokens, 'ts', nowMs)
-        -- expire an idle bucket once it would be full again anyway (+60s slack)
         redis.call('PEXPIRE', KEYS[1], math.ceil(capacity / rate * 1000) + 60000)
         return {allowed, math.floor(tokens), retryMs}
         """;
