@@ -1,6 +1,6 @@
-# Redis Patterns in Production — C# / .NET 8
+# Redis Patterns
 
-17 Redis patterns implemented the way you would ship them — failure modes handled, atomicity in Lua where it must be, and comments in the code explaining *why*, not just *what*. One solution, one API, one `docker compose up`.
+Production-ready Redis patterns built for the real world. Features resilient error handling, atomic Lua scripts, and insightful comments explaining the why, not just the what. Run the entire solution and API instantly with a single docker compose up.
 
 ```
 RedisPatterns.sln
@@ -456,17 +456,4 @@ Switch `"policy":"allkeys-lru"` and repeat: `inspect` now returns `OBJECT IDLETI
 
 Watch `evicted_keys` in `INFO stats` (surfaced by `/eviction/stats`): climbing evictions on a cache is normal; on `volatile-*` it can mean TTL discipline slipped; on `noeviction` an OOM error is a page.
 
-## Production notes
 
-- One `ConnectionMultiplexer` per process, `abortConnect=false` — per-request connections are the #1 StackExchange.Redis misuse. `allowAdmin=true` is enabled here only for the eviction lab's CONFIG/INFO access; keep it off for normal app connections.
-- Every multi-step invariant lives in a Lua script — never check-then-act from the client.
-- Keys are built only in `Infrastructure/RedisKeys.cs`: namespaced, with cluster hash-tags where scripts touch multiple keys per subject.
-- Every Redis-touching cache path fails open (an outage costs latency, not availability); Postgres is the only source of truth.
-- Every background worker (flusher, job worker, promoter, both Kafka consumers) catches, logs, and continues — a worker that dies quietly is an incident with a delay timer.
-- Compose runs Redis with AOF `everysec` and an explicit `maxmemory` + policy, because default `noeviction` with no limit is how staging configs reach production.
-- Kafka consumers run `EnableAutoCommit=false` and commit after processing; producers run `Acks=All` + `EnableIdempotence=true`.
-- Write-behind and the exactly-once projection share one principle: **persist first, acknowledge last** — and both survive redelivery because their database writes are idempotent.
-
-## NuGet dependencies
-
-`StackExchange.Redis 2.8.16`, `Npgsql 8.0.5`, `Dapper 2.1.35`, `Confluent.Kafka 2.5.3`. The API project adds nothing beyond the shared framework.
