@@ -2,6 +2,10 @@
 ![Stars](https://img.shields.io/github/stars/sonne120/RedisPatterns)
 ![Last commit](https://img.shields.io/github/last-commit/sonne120/RedisPatterns)
 
+[![Downloads](https://img.shields.io/github/downloads/sonne120/RedisPatterns/total)](https://github.com/sonne120/RedisPatterns/releases)
+[![Latest](https://img.shields.io/github/downloads/sonne120/RedisPatterns/latest/total)](https://github.com/sonne120/RedisPatterns/releases/latest)
+
+
 # Redis Patterns
 
 Production-ready Redis patterns built.
