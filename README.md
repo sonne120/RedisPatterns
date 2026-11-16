@@ -1,6 +1,11 @@
+![C#](https://img.shields.io/badge/C%23-512BD4)
 ![.NET](https://img.shields.io/badge/.NET-8-512BD4)
+![Redis](https://img.shields.io/badge/Redis-DC382D)
+![Language](https://img.shields.io/github/languages/top/sonne120/RedisPatterns)
 ![Stars](https://img.shields.io/github/stars/sonne120/RedisPatterns)
+![Forks](https://img.shields.io/github/forks/sonne120/RedisPatterns)
 ![Last commit](https://img.shields.io/github/last-commit/sonne120/RedisPatterns)
+![Patterns](https://img.shields.io/badge/patterns-17-brightgreen)
 
 # Redis Patterns
 
