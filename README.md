@@ -1,3 +1,7 @@
+![.NET](https://img.shields.io/badge/.NET-8-512BD4)
+![Stars](https://img.shields.io/github/stars/sonne120/RedisPatterns)
+![Last commit](https://img.shields.io/github/last-commit/sonne120/RedisPatterns)
+
 # Redis Patterns
 
 Production-ready Redis patterns built.
